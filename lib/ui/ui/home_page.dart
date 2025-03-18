@@ -18,162 +18,140 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     User? user = _auth.currentUser;
 
     userId = user!.uid;
     userData = _auth.getUserData(userId!);
-    // _getLeaveCount();
   }
-
-  Future<void> fetchUserName() async {
-    String userId = FirebaseAuth.instance.currentUser?.uid ?? "unknown";
-
-    if (userId == "unknown") return;
-
-    try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-
-      if (userDoc.exists) {
-        String firstName = userDoc.get('first_name') ?? '';
-        String lastName = userDoc.get('last_name') ?? '';
-        String fullName = '$firstName $lastName';
-
-        if (mounted) {
-          setState(() {
-            controllerName.text =
-                fullName; // Mengisi field dengan nama pengguna
-          });
-        }
-      }
-    } catch (e) {
-      print("Error retrieving username: $e");
-    }
-  }
-
-  // Future<void> _getLeaveCount() async {
-  //   String userId = FirebaseAuth.instance.currentUser!.uid;
-  //
-  //   QuerySnapshot leaveSnapshot = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(userId)
-  //       .collection('attendance')
-  //       .get();
-  //
-  //   setState(() {
-  //     leaveCount = leaveSnapshot.docs.length;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
+        backgroundColor: Colors.blue[50],
         automaticallyImplyLeading: false,
-      ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: userData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+        title: FutureBuilder<Map<String, dynamic>>(
+          future: userData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
 
-          if (snapshot.hasError) {
-            return const Center(child: Text('Error fetching data'));
-          }
+            if (snapshot.hasError ||
+                !snapshot.hasData ||
+                snapshot.data!.isEmpty) {
+              return const Text("User");
+            }
 
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('User data not found'));
-          }
-
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome back",
-                        style: TextStyle(color: Colors.grey, fontSize: 20),
-                      ),
-                      SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            snapshot.data!['first_name'],
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            snapshot.data!['last_name'],
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          children: [
-                            _buildMenuItem(Icons.calendar_today, "Attendance",
-                                () {
-                              Navigator.pushNamed(context, '/home-attendance');
-                            }, iconColor: Colors.blue, textColor: Colors.blue),
-                            _buildMenuItem(Icons.note, "Notes", () {
-                              Navigator.pushNamed(context, '/note');
-                            }, iconColor: Colors.blue, textColor: Colors.blue),
-                            _buildMenuItem(Icons.person, "Profile", () {
-                              Navigator.pushNamed(context, '/profile');
-                            }, iconColor: Colors.blue, textColor: Colors.blue),
-                            _buildMenuItem(Icons.new_releases, "Up Coming", () {
-                              Navigator.pushNamed(context, '');
-                            },
-                                iconColor: Colors.blueGrey,
-                                textColor: Colors.blueGrey),
-                          ],
-                        ),
-                      ),
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.blue,
-                      //     borderRadius: BorderRadius.circular(50)
-                      //   ),
-                      //     child: Padding(
-                      //       padding: const EdgeInsets.all(8.0),
-                      //       child: Text('$leaveCount'),
-                      //     ))
-                    ],
-                  ),
+                Text(
+                  "Hello",
+                  style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500),
                 ),
-                Center(
-                  child: Text(
-                    'Version 1.0',
-                    style: subWelcomeTextStyle,
-                  ),
+                SizedBox(height: 5),
+                Text(
+                  '${snapshot.data!['first_name']} ${snapshot.data!['last_name']}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.blueGrey),
                 )
               ],
+            );
+          },
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.notifications_none_rounded, size: 35,color: Colors.blueGrey,),
             ),
-          );
-        },
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            TextField(
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                hintText: "Search",
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.search_sharp, size: 25,),
+                ),
+                hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                ),
+                labelStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.blueAccent),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.blueAccent),
+                ),
+              ),
+            ),
+            SizedBox(height: 20,),
+            Text(
+              'Accademics',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.blueAccent),
+            ),
+            SizedBox(height: 15),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 3,
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                children: [
+                  _buildMenuItem(Image.asset('assets/images/attendance.png', width: 50, height: 50), "Profile", () {
+                    Navigator.pushNamed(context, '/profile');
+                  }),
+                  _buildMenuItem(Image.asset('assets/images/assiment.png', width: 50, height: 50), "Attendance", () {
+                    Navigator.pushNamed(context, '/home-attendance');
+                  }),
+                  _buildMenuItem(Image.asset('assets/images/note.png', width: 50, height: 50), "Notes", () {
+                    Navigator.pushNamed(context, '/note');
+                  }),
+                  // _buildMenuItem(Icons.new_releases, "Up Coming", () {
+                  //   Navigator.pushNamed(context, '');
+                  // }),
+                ],
+              ),
+            ),
+            Center(
+              child: Text(
+                'Version 1.0',
+                style: subWelcomeTextStyle,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap,
-      {Color iconColor = Colors.blue, Color textColor = Colors.black}) {
+  Widget _buildMenuItem(Widget image, String title, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -186,24 +164,26 @@ class _HomePageState extends State<HomePage> {
               blurRadius: 5,
               spreadRadius: 2,
               offset: Offset(0, 3),
-            )
+            ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: iconColor), // Warna ikon bisa diubah
-            SizedBox(height: 10),
+            image, // Tidak perlu panggil Image.asset lagi
+            const SizedBox(height: 10),
             Text(
               title,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: textColor), // Warna teks bisa diubah
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
 }
