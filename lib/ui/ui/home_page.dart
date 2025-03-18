@@ -47,17 +47,17 @@ class _HomePageState extends State<HomePage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Hello",
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   '${snapshot.data!['first_name']} ${snapshot.data!['last_name']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
                       color: Colors.blueGrey),
@@ -81,50 +81,53 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               textInputAction: TextInputAction.done,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                 hintText: "Search",
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.search_sharp, size: 25,),
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.search_sharp, size: 25, color: Colors.grey,),
                 ),
                 hintStyle: const TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
+                  fontWeight: FontWeight.w600
                 ),
                 labelStyle: const TextStyle(
                     fontSize: 14,
                     color: Colors.black),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.blueAccent),
+                  borderSide: BorderSide.none,
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.blueAccent),
+                  borderSide: BorderSide.none,
                 ),
               ),
             ),
-            SizedBox(height: 20,),
-            Text(
-              'Accademics',
+            const SizedBox(height: 20,),
+            const Text(
+              'Academics',
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
                   color: Colors.blueAccent),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Expanded(
               child: GridView.count(
                 crossAxisCount: 3,
                 mainAxisSpacing: 20,
                 crossAxisSpacing: 20,
                 children: [
-                  _buildMenuItem(Image.asset('assets/images/attendance.png', width: 50, height: 50), "Profile", () {
+                  _buildMenuItem(Image.asset('assets/images/attendance.png', width: 50, height: 50), "Students", () {
                     Navigator.pushNamed(context, '/profile');
                   }),
                   _buildMenuItem(Image.asset('assets/images/assiment.png', width: 50, height: 50), "Attendance", () {
@@ -163,14 +166,14 @@ class _HomePageState extends State<HomePage> {
               color: Colors.grey.withOpacity(0.2),
               blurRadius: 5,
               spreadRadius: 2,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            image, // Tidak perlu panggil Image.asset lagi
+            image,
             const SizedBox(height: 10),
             Text(
               title,

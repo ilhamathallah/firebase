@@ -92,7 +92,7 @@ class _NotePageState extends State<NotePage> {
       TextFormField(
         controller: _titleController,
         decoration: InputDecoration(
-          labelText: "Title",
+          hintText: "Title",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -102,7 +102,7 @@ class _NotePageState extends State<NotePage> {
       TextFormField(
         controller: _imageUrlController,
         decoration: InputDecoration(
-          labelText: "Image URL",
+          hintText: "Image URL",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
@@ -110,7 +110,7 @@ class _NotePageState extends State<NotePage> {
       TextFormField(
         controller: _contentController,
         decoration: InputDecoration(
-          labelText: "Content",
+          hintText: "Content",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
         maxLines: 3,
@@ -121,24 +121,35 @@ class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blue[50],
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.blue),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "Note Page",
+          "Note",
           style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 24, fontWeight: FontWeight.w500, color: Colors.blue),
         ),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                size: 35,
+                color: Colors.blueGrey,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white, // Background yang lebih soft
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -148,17 +159,11 @@ class _NotePageState extends State<NotePage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
-                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  const SizedBox(height: 12),
                   ..._buildTextFields(),
                   const SizedBox(height: 12),
                   ElevatedButton.icon(
@@ -177,9 +182,7 @@ class _NotePageState extends State<NotePage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 16),
-
             // List Notes
             Expanded(
               child: StreamBuilder<QuerySnapshot>(

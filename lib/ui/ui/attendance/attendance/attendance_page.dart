@@ -246,18 +246,32 @@ class _AttendanceState extends State<Attendance> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blue[50],
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.blue),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "Attendance Menu",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          "Attendance",
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.w500, color: Colors.blue),
         ),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                size: 35,
+                color: Colors.blueGrey,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Card(

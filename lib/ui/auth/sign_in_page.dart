@@ -20,7 +20,7 @@ class _SignInPageState extends State<SignInPage> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
             'Email and password cannot be empty',
           ),
@@ -32,7 +32,7 @@ class _SignInPageState extends State<SignInPage> {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text(
               'Email and password cannot be empty',
             ),
@@ -63,12 +63,16 @@ class _SignInPageState extends State<SignInPage> {
                         height: 50,
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     // text welcome
                     Text(
                       welcomeBackTextLogin,
-                      style:
-                          TextStyle(fontSize: 26, fontWeight: FontWeight.w500, color: Colors.blue),
+                      style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.blue),
                     ),
                     const SizedBox(height: 8),
                     // text sub
@@ -135,22 +139,22 @@ class _SignInPageState extends State<SignInPage> {
                     SizedBox(
                       child: isLoading
                           ? Center(
-                        child: CircularProgressIndicator(),
-                      )
+                              child: CircularProgressIndicator(),
+                            )
                           : ElevatedButton(
-                        onPressed: () {
-                          _login();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          minimumSize: Size(double.infinity, 50),
-                        ),
-                        child: Text(hintLogin),
-                      ),
+                              onPressed: () {
+                                _login();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                minimumSize: Size(double.infinity, 50),
+                              ),
+                              child: Text(hintLogin),
+                            ),
                     ),
                     const SizedBox(height: 20),
                     // or text
@@ -184,7 +188,7 @@ class _SignInPageState extends State<SignInPage> {
                             Container(
                               width: 40,
                               height: 40,
-                              margin: EdgeInsets.all(8),
+                              margin: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 image: DecorationImage(
@@ -195,7 +199,7 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 8,
                         ),
                         Row(
@@ -203,7 +207,7 @@ class _SignInPageState extends State<SignInPage> {
                             Container(
                               width: 40,
                               height: 40,
-                              margin: EdgeInsets.all(8),
+                              margin: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 image: DecorationImage(
@@ -233,7 +237,7 @@ class _SignInPageState extends State<SignInPage> {
                     },
                     child: Text(
                       hintRegister,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.w500),
                     ),
                   ),

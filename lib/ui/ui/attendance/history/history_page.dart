@@ -13,31 +13,46 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blue[50],
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.blue),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "History Attendance",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          "History",
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.w500, color: Colors.blue),
         ),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                size: 35,
+                color: Colors.blueGrey,
+              ),
+            ),
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: dataService.getAttendanceStream(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('Error loading data'));
+            return const Center(child: Text('Error loading data'));
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('There is not data'));
+            return const Center(child: Text('There is not data'));
           }
 
           final data = snapshot.data!.docs;

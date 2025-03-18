@@ -31,7 +31,7 @@ class _LeavePageState extends State<LeavePage> {
 
     try {
       DocumentSnapshot userDoc =
-      await firestore.collection('user').doc(userId).get();
+          await firestore.collection('user').doc(userId).get();
       print("User Doc: ${userDoc.data()}");
 
       String firstName = userDoc['firstName'];
@@ -46,162 +46,176 @@ class _LeavePageState extends State<LeavePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        title: const Text(
-          "Permission Page",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: Colors.blueAccent,
-        iconTheme: const IconThemeData(
-          color: Colors.white
-        ),
+        backgroundColor: Colors.blue[50],
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.blue),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        title: const Text(
+          "Permission",
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.w500, color: Colors.blue),
+        ),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                size: 35,
+                color: Colors.blueGrey,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 20),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Row(
+                  children: <Widget>[
+                    Icon(Icons.info, color: Colors.white),
+                    SizedBox(width: 12),
+                    Text(
+                      "Please fill the form below",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              /// Name
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: "Your Name",
+                  labelStyle: const TextStyle(color: Colors.blue),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              /// Dropdown Leave Type
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: [
+                  const Text(
+                    "Leave Type",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                  ),
+                  const SizedBox(height: 5),
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                      color: Colors.blue,
                       borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.blueAccent),
                     ),
-                    child: const Row(
-                      children: <Widget>[
-                        Icon(Icons.info, color: Colors.white),
-                        SizedBox(width: 12),
-                        Text(
-                          "Please fill the form below",
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  /// Name
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: "Your Name",
-                      labelStyle: TextStyle(color: Colors.blue),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  /// Dropdown Leave Type
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Leave Type",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
-                      ),
-                      const SizedBox(height: 5),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.blueAccent),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            value: dropValueCategories,
-                            style: TextStyle(color: Colors.blue),
-                            items: categoryList.map((e) {
-                              return DropdownMenuItem(
-                                value: e,
-                                child: Text(e),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                dropValueCategories = value!;
-                              });
-                            },
-                            isExpanded: true,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-
-                  /// Date Pickers
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDateField("From", fromController),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildDateField("Until", untilController),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  /// Submit Button
-                  SizedBox(
-                    width: size.width * 0.9,
-                    height: 50,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        if (nameController.text.isEmpty ||
-                            dropValueCategories == "Please Choose" ||
-                            fromController.text.isEmpty ||
-                            untilController.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Row(
-                                children: [
-                                  Icon(Icons.info_outline, color: Colors.white),
-                                  SizedBox(width: 10),
-                                  Text("Please fill all the form"),
-                                ],
-                              ),
-                              backgroundColor: Colors.redAccent,
-                              behavior: SnackBarBehavior.floating,
-                            ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: dropValueCategories,
+                        style: const TextStyle(color: Colors.blue),
+                        items: categoryList.map((e) {
+                          return DropdownMenuItem(
+                            value: e,
+                            child: Text(e),
                           );
-                        } else {
-                          submitAbsent(
-                            nameController.text,
-                            dropValueCategories,
-                            fromController.text,
-                            untilController.text,
-                          );
-                        }
-                      },
-                      label: const Text("Submit", style: TextStyle(color: Colors.white),),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            dropValueCategories = value!;
+                          });
+                        },
+                        isExpanded: true,
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
+              const SizedBox(height: 15),
+
+              /// Date Pickers
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDateField("From", fromController),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _buildDateField("Until", untilController),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              /// Submit Button
+              SizedBox(
+                width: size.width * 0.9,
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    if (nameController.text.isEmpty ||
+                        dropValueCategories == "Please Choose" ||
+                        fromController.text.isEmpty ||
+                        untilController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Row(
+                            children: [
+                              Icon(Icons.info_outline, color: Colors.white),
+                              SizedBox(width: 10),
+                              Text("Please fill all the form"),
+                            ],
+                          ),
+                          backgroundColor: Colors.redAccent,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    } else {
+                      submitAbsent(
+                        nameController.text,
+                        dropValueCategories,
+                        fromController.text,
+                        untilController.text,
+                      );
+                    }
+                  },
+                  label: const Text(
+                    "Submit",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -215,7 +229,8 @@ class _LeavePageState extends State<LeavePage> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.blueAccent),
         ),
         const SizedBox(height: 5),
         TextField(
@@ -233,9 +248,10 @@ class _LeavePageState extends State<LeavePage> {
             }
           },
           decoration: InputDecoration(
-            suffixIcon: const Icon(Icons.calendar_today, color: Colors.blueAccent),
+            suffixIcon:
+                const Icon(Icons.calendar_today, color: Colors.blueAccent),
             hintText: "Select date",
-            hintStyle: TextStyle(color: Colors.blue),
+            hintStyle: const TextStyle(color: Colors.blue),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -253,13 +269,13 @@ class _LeavePageState extends State<LeavePage> {
     String userId = FirebaseAuth.instance.currentUser?.uid ?? 'Unknown';
     print("USER ID =  $userId");
     if (userId == 'Unknown') {
-      print("ERROR: User ID is unknowner");
+      print("ERROR: User ID is unknown");
       return;
     }
 
     DocumentReference UserDocRef = firestore.collection('users').doc(userId);
     CollectionReference attendanceCollection =
-    UserDocRef.collection('attendance');
+        UserDocRef.collection('attendance');
 
     attendanceCollection.add({
       'name': name,
@@ -267,13 +283,13 @@ class _LeavePageState extends State<LeavePage> {
       'datetime': '$from-$until',
       'createdAt': FieldValue.serverTimestamp(),
     }).then(
-          (result) {
+      (result) {
         print("Data has been saved whit ID = ${result.id}");
         setState(
-              () {
+          () {
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Row(
                   children: [
                     Icon(Icons.check_circle_outline, color: Colors.white),
@@ -316,8 +332,8 @@ class _LeavePageState extends State<LeavePage> {
           ),
           backgroundColor: Colors.blueGrey,
           behavior: SnackBarBehavior.floating,
-          shape: StadiumBorder(),
-          duration: Duration(seconds: 3),
+          shape: const StadiumBorder(),
+          duration: const Duration(seconds: 3),
         ),
       );
     });
@@ -344,5 +360,4 @@ class _LeavePageState extends State<LeavePage> {
           return alertDialog;
         });
   }
-
 }

@@ -12,6 +12,23 @@ class _HomeAttendanceState extends State<HomeAttendance> {
   int sickCount = 0;
   int permissionCount = 0;
   int otherCount = 0;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  Map<DateTime, Color> eventColors = {
+    DateTime(2023, 5, 2): Colors.green,
+    DateTime(2023, 5, 7): Colors.red,
+    DateTime(2023, 5, 8): Colors.green,
+    DateTime(2023, 5, 11): Colors.red,
+    DateTime(2023, 5, 15): Colors.green,
+    DateTime(2023, 5, 19): Colors.blue,
+    DateTime(2023, 5, 21): Colors.green,
+    DateTime(2023, 5, 23): Colors.yellow,
+    DateTime(2023, 5, 24): Colors.yellow,
+    DateTime(2023, 5, 26): Colors.blue,
+    DateTime(2023, 5, 28): Colors.red,
+    DateTime(2023, 5, 30): Colors.green,
+  };
 
   @override
   void initState() {
@@ -35,59 +52,168 @@ class _HomeAttendanceState extends State<HomeAttendance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blue[50],
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.blue),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "Home Attendance",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          "Attendance",
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.w500, color: Colors.blue),
         ),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                size: 35,
+                color: Colors.blueGrey,
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20,),
-            const Text(
-              "Manage Your Attendance",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
-            ),
-            const SizedBox(height: 20),
-
-            Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                _buildMenuItem(Icons.check_circle, "Attendance", Colors.blue, () {
-                  Navigator.pushNamed(context, '/attendance');
-                }),
-                _buildMenuItem(Icons.event_available, "Permission", Colors.blue, () {
-                  Navigator.pushNamed(context, '/leave');
-                }),
-                _buildMenuItem(Icons.history, "History", Colors.blue, () {
-                  Navigator.pushNamed(context, '/history');
-                }),
-                _buildStatCard('Sick', sickCount, Colors.red),
-                _buildStatCard('Permission', permissionCount, Colors.green),
-                _buildStatCard('other', otherCount, Colors.blue)
-              ],
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  _buildMenuItem(Icons.check_circle, "Attendance", Colors.blue,
+                      () {
+                    Navigator.pushNamed(context, '/attendance');
+                  }),
+                  _buildMenuItem(
+                      Icons.event_available, "Permission", Colors.blue, () {
+                    Navigator.pushNamed(context, '/leave');
+                  }),
+                  _buildMenuItem(Icons.history, "History", Colors.blue, () {
+                    Navigator.pushNamed(context, '/history');
+                  }),
+                  // _buildStatCard('Sick', sickCount, Colors.red),
+                  // _buildStatCard('Permission', permissionCount, Colors.green),
+                  // _buildStatCard('Other', otherCount, Colors.blue),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: [
+                    TableCalendar(
+                      focusedDay: _focusedDay,
+                      firstDay: DateTime(2000),
+                      lastDay: DateTime(2100),
+                      selectedDayPredicate: (day) =>
+                          isSameDay(_selectedDay, day),
+                      onDaySelected: (selectedDay, focusedDay) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                        });
+                      },
+                      calendarFormat: CalendarFormat.month,
+                      headerStyle: const HeaderStyle(
+                        formatButtonVisible: false,
+                        titleCentered: true,
+                        titleTextStyle: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.blue),
+                      ),
+                      daysOfWeekStyle: const DaysOfWeekStyle(
+                        weekdayStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blueGrey),
+                        weekendStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blueGrey),
+                      ),
+                      calendarBuilders: CalendarBuilders(
+                        defaultBuilder: (context, day, _) {
+                          Color? color = eventColors[
+                              DateTime(day.year, day.month, day.day)];
+                          return Container(
+                            margin: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: color ?? Colors.transparent,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "${day.day}",
+                                style: TextStyle(
+                                  color: color != null
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      calendarStyle: const CalendarStyle(
+                        selectedTextStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                        ),
+                        todayDecoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          shape: BoxShape.circle
+                        ),
+                        todayTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16
+                        )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildLegend("Permission", Colors.green),
+                  _buildLegend("Sick", Colors.red),
+                  _buildLegend("Other", Colors.blue),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, Color color, VoidCallback onTap) {
+  Widget _buildLegend(String label, Color color) {
+    return Row(
+      children: [
+        Container(
+            width: 15, height: 15, decoration: BoxDecoration(color: color)),
+        const SizedBox(width: 5),
+        Text(label, style: const TextStyle(fontSize: 12)),
+      ],
+    );
+  }
+
+  Widget _buildMenuItem(
+      IconData icon, String title, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 4,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
@@ -101,7 +227,10 @@ class _HomeAttendanceState extends State<HomeAttendance> {
               const SizedBox(height: 10),
               Text(
                 title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue),
               ),
             ],
           ),
@@ -120,28 +249,24 @@ class _HomeAttendanceState extends State<HomeAttendance> {
             color: Colors.grey.withOpacity(0.2),
             blurRadius: 5,
             spreadRadius: 2,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           )
         ],
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             title,
             style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: color),
+                fontSize: 16, fontWeight: FontWeight.bold, color: color),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             count.toString(),
             style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color),
+                fontSize: 24, fontWeight: FontWeight.bold, color: color),
           ),
         ],
       ),

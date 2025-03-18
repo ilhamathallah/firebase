@@ -19,6 +19,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:camera/camera.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 part 'auth/sign_in_page.dart';
 part 'auth/sign_up_page.dart';
