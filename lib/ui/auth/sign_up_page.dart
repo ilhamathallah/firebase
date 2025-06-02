@@ -150,7 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           Expanded(
                             child: TextFormField(
-                              controller: firstNameController,
+                              controller: lastNameController,
                               decoration: InputDecoration(
                                 labelText: hintLastName,
                                 border: OutlineInputBorder(

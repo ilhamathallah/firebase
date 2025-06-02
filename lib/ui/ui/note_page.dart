@@ -166,7 +166,7 @@ class _NotePageState extends State<NotePage> {
                   const SizedBox(height: 12),
                   ..._buildTextFields(),
                   const SizedBox(height: 12),
-                  ElevatedButton.icon(
+                  ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                       padding: const EdgeInsets.symmetric(
@@ -175,8 +175,7 @@ class _NotePageState extends State<NotePage> {
                           borderRadius: BorderRadius.circular(8)),
                     ),
                     onPressed: _addNote,
-                    icon: const Icon(Icons.save, color: Colors.white),
-                    label: const Text('Save Note',
+                    child: const Text('Save Note',
                         style: TextStyle(color: Colors.white, fontSize: 16)),
                   ),
                 ],

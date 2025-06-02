@@ -133,4 +133,20 @@ class FirebaseService {
     await _auth.currentUser!.updatePassword(newPassword);
   }
 
+  Future<void> saveAttendance(String category) async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    DateTime now = DateTime.now();
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('attendance')
+        .add({
+      'category': category, // wajib: hadir, izin, sakit, alpha
+      'tanggal': Timestamp.fromDate(now),
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+
 }
